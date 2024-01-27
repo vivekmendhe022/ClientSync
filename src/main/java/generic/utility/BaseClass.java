@@ -1,5 +1,6 @@
 package generic.utility;
 
+import java.io.IOException;
 import java.time.Duration;
 
 import org.openqa.selenium.WebDriver;
@@ -20,15 +21,21 @@ public class BaseClass {
 
 	public WebDriver d = null;
 
+	public PropertyFileUtility putil = new PropertyFileUtility();
+	public WebDriverUtility wutil = new WebDriverUtility();
+
 	@BeforeSuite
 	public void BSConfig() {
 		System.out.println("Connected to Database");
 	}
 
 	@BeforeClass
-	public void BCConfig() {
+	public void BCConfig() throws IOException {
+
 		// Launch browser
-		String BROWSER = "chrome";
+		String URL = putil.readDataFromPropertyFile("url");
+
+		String BROWSER = putil.readDataFromPropertyFile("browser");
 		switch (BROWSER) {
 		case "chrome":
 			WebDriverManager.chromedriver().setup();
@@ -51,34 +58,36 @@ public class BaseClass {
 			System.out.println(BROWSER + " is invalid browser.");
 			break;
 		}
-		
+
 		// maximize screen
-		d.manage().window().maximize();
-		
+		wutil.maximizeCurrentWindow(d);
+
 		// wait for page to load
-		d.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-		
+		wutil.waitToPageLoad(d);
+
 		// navigate to main URL
-		d.get("http://localhost/vtigercrm/");
+		d.get(URL);
+
 	}
 
 	@BeforeMethod
-	public void BMConfig() {
+	public void BMConfig() throws IOException {
+
 		// Login to application
-		String USERNAME="admin";
-		String PASSWORD="admin";
-		
-		HomePage hp=new HomePage(d);
+		String USERNAME = putil.readDataFromPropertyFile("username");
+		String PASSWORD = putil.readDataFromPropertyFile("password");
+
+		HomePage hp = new HomePage(d);
 		hp.loginToApplication(USERNAME, PASSWORD);
-		
+
 		System.out.println("Login");
-		
+
 	}
 
 	@AfterMethod
 	public void AMConfig() {
 		// Logout to application
-		HomePage hp=new HomePage(d);
+		HomePage hp = new HomePage(d);
 		hp.logoutToApplication();
 		System.out.println("Logout");
 	}

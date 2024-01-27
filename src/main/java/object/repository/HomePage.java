@@ -34,6 +34,9 @@ public class HomePage extends WebDriverUtility {
 	@FindBy(xpath = "//span[normalize-space()='Campaigns']")
 	private WebElement CampaignLinkText;
 
+	@FindBy(xpath = "//span[normalize-space()='Leads']")
+	private WebElement LeadsLinkText;
+
 	public HomePage(WebDriver d) {
 		PageFactory.initElements(d, this);
 	}
@@ -67,5 +70,20 @@ public class HomePage extends WebDriverUtility {
 		hoverOnWebElement(d, MarketingLinkText);
 		waitForElementToClickAble(d, CampaignLinkText);
 		CampaignLinkText.click();
+	}
+
+	public void clickOnLeadsLinkText(WebDriver d) throws InterruptedException {
+		for (;;) {
+			try {
+				MenuIconLookUpImg.click();
+				break;
+			} catch (Exception e) {
+				Thread.sleep(3000);
+
+			}
+		}
+		hoverOnWebElement(d, MarketingLinkText);
+		waitForElementToClickAble(d, LeadsLinkText);
+		LeadsLinkText.click();
 	}
 }

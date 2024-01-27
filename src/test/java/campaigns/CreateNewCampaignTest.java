@@ -28,5 +28,4 @@ public class CreateNewCampaignTest extends BaseClass {
 		System.out.println("Save Button Clicked");
 
 	}
-
 }
